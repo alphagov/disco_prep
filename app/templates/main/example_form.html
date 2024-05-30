@@ -37,29 +37,15 @@ Try and keep the time period to one day
 <form action="/" method="POST" novalidate>
 {{ form.csrf_token }}
 
-{{ form.desired_url(params={
-  'type': 'string',
-  'autocomplete': 'string',
-  'spellcheck': false
-}) }}
+{{ form.desired_url }}
 
-{{ form.start_date(params={
-  'type': 'string',
-  'autocomplete': 'string',
-  'spellcheck': false
-}) }}
+{{ form.start_date }}
 
-{{ form.end_date(params={
-  'type': 'string',
-  'autocomplete': 'string',
-  'spellcheck': false
-}) }}
+{{ form.end_date }}
 
-{{ form.ga_toggle(params={
-  'type': 'string'
-}) }}
+{{ form.ga_toggle }}
 
-<p>{{form.submit}}</p>
+{{ form.submit }}
 </form>
 
     </div>

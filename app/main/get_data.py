@@ -84,7 +84,7 @@ def get_summary_data(start_date, end_date, desired_page, ga_toggle):
     tot_bytes_processed = query_job.total_bytes_processed
     gb_processed = tot_bytes_processed / (1024 ** 3)
     query_cost = tot_bytes_processed / (1024 ** 4) * 5
-    return client.query(summary_sql).to_dataframe(), gb_processed, query_cost
+    return gb_processed, query_cost
 
 
 def get_csv_data(start_date, end_date, desired_page, ga_toggle):
