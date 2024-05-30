@@ -11,7 +11,7 @@ credentials, project_id = google.auth.default()
 client = bigquery.Client()
 
 
-def get_summary_data(start_date, end_date, desiredPage):
+def get_summary_data(start_date, end_date, desiredPage, ga_toggle):
     start_date = datetime.strftime(start_date, '%Y%m%d')
     end_date = datetime.strftime(end_date, '%Y%m%d')
 
@@ -20,7 +20,7 @@ def get_summary_data(start_date, end_date, desiredPage):
       DECLARE final_date STRING DEFAULT '{end_date}';
       DECLARE filtered_urls_for STRING DEFAULT '{desiredPage}';
 
-      WITH 
+      WITH
         sessions AS (
           SELECT DISTINCT fullVisitorId, visitId
           FROM `govuk-bigquery-analytics.87773428.ga_sessions_*`, UNNEST(hits) AS hits
@@ -51,7 +51,7 @@ def get_summary_data(start_date, end_date, desiredPage):
           SELECT DISTINCT unique_session_id
           FROM `ga4-analytics-352613.flattened_dataset.flattened_daily_ga_data_*`
           WHERE _table_suffix between first_date AND final_date
-          AND event_name = 'session_start' 
+          AND event_name = 'session_start'
           AND REGEXP_CONTAINS(cleaned_page_location, filtered_urls_for)
         )
 
@@ -75,6 +75,10 @@ def get_summary_data(start_date, end_date, desiredPage):
 
     """
 
+    if ga_toggle == 'ua':
+        summary_sql = summary_sql_ua
+    else:
+        summary_sql = summary_sql_ga4
     job_config = bigquery.QueryJobConfig(dry_run=True, use_query_cache=False)
     query_job = client.query(
         summary_sql,
@@ -86,7 +90,7 @@ def get_summary_data(start_date, end_date, desiredPage):
     return client.query(summary_sql).to_dataframe(), gb_processed, query_cost
 
 
-def get_csv_data(start_date, end_date, desiredPage):
+def get_csv_data(start_date, end_date, desiredPage, ga_toggle):
     start_date = datetime.strftime(start_date, '%Y%m%d')
     end_date = datetime.strftime(end_date, '%Y%m%d')
 
@@ -95,7 +99,7 @@ def get_csv_data(start_date, end_date, desiredPage):
       DECLARE final_date STRING DEFAULT '{end_date}';
       DECLARE filtered_urls_for STRING DEFAULT '{desiredPage}';
 
-      WITH 
+      WITH
         sessions AS (
           SELECT DISTINCT fullVisitorId, visitId
           FROM `govuk-bigquery-analytics.87773428.ga_sessions_*`, UNNEST(hits) AS hits
@@ -141,7 +145,7 @@ def get_csv_data(start_date, end_date, desiredPage):
           SELECT DISTINCT unique_session_id
           FROM `ga4-analytics-352613.flattened_dataset.flattened_daily_ga_data_*`
           WHERE _table_suffix between first_date AND final_date
-          AND event_name = 'session_start' 
+          AND event_name = 'session_start'
           AND REGEXP_CONTAINS(cleaned_page_location, filtered_urls_for)
         )
 
@@ -164,5 +168,8 @@ def get_csv_data(start_date, end_date, desiredPage):
       GROUP BY ALL
 
     """
-
+    if ga_toggle == 'ua':
+        csv_sql = csv_sql_ua
+    else:
+        csv_sql = csv_sql_ga4
     return client.query(csv_sql).to_dataframe()

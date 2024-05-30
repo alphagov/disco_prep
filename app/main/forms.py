@@ -1,7 +1,8 @@
 from flask_wtf import FlaskForm
-from govuk_frontend_wtf.wtforms_widgets import GovRadioInput, GovSubmitInput, GovTextInput, GovDateInput
-from wtforms.fields import RadioField, SubmitField, StringField, DateField
-from wtforms.validators import InputRequired, Length, Optional, DataRequired
+from govuk_frontend_wtf.wtforms_widgets import GovRadioInput, GovSubmitInput, GovTextInput, GovDateInput, GovSelect
+from wtforms.fields import RadioField, SubmitField, StringField, DateField, SelectField
+from wtforms.validators import InputRequired, Length
+
 
 class CookiesForm(FlaskForm):
     functional = RadioField(
@@ -20,6 +21,7 @@ class CookiesForm(FlaskForm):
     )
     save = SubmitField("Save cookie settings", widget=GovSubmitInput())
 
+
 class DiscoForm(FlaskForm):
 
     desired_url = StringField(
@@ -33,23 +35,30 @@ class DiscoForm(FlaskForm):
     )
 
     start_date = DateField(
-                "Please enter the start date for the period you need data for",
-                widget=GovDateInput(),
-                format = "%d %m %Y",
-                validators=[
-                    InputRequired()
-                ]
-            )
+        "Please enter the start date for the period you need data for",
+        widget=GovDateInput(),
+        format="%d %m %Y",
+        validators=[
+            InputRequired()
+        ]
+    )
 
     end_date = DateField(
-                "Please enter the end date for the period you need data for",
-                widget=GovDateInput(),
-                format="%d %m %Y",
-                validators=[
-                    InputRequired()
-                ]
-            )
+        "Please enter the end date for the period you need data for",
+        widget=GovDateInput(),
+        format="%d %m %Y",
+        validators=[
+            InputRequired()
+        ]
+    )
 
+    ga_toggle = SelectField(
+        "Please choose the Google Analytics version you would like to use",
+        widget=GovSelect(),
+        choices=[("ua", "Universal Analytics"), ("ga4", "Google Analytics 4")],
+        validators=[
+            InputRequired()
+        ]
+    )
 
     submit = SubmitField("Continue", widget=GovSubmitInput())
-
