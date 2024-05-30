@@ -19,6 +19,7 @@ csrf = CSRFProtect()
 limiter = Limiter(key_func=get_remote_address, default_limits=["2 per second", "60 per minute"])
 talisman = Talisman()
 
+
 def create_app(config_class=Config):
     app = Flask(__name__, static_url_path="/assets")
     app.config.from_object(config_class)
@@ -36,22 +37,10 @@ def create_app(config_class=Config):
         ]
     )
 
-    # Set content security policy
-    csp = {
-        "default-src": "'self'",
-        "script-src": [
-            "'self'",
-            "'sha256-+6WnXIl4mbFTCARd8N3COQmT3bJJmo32N8q8ZSQAIcU='",
-            "'sha256-l1eTVSK8DTnK8+yloud7wZUqFrI0atVo6VlC6PJvYaQ='",
-        ],
-    }
-
     # Initialise app extensions
     assets.init_app(app)
     compress.init_app(app)
     csrf.init_app(app)
-    # limiter.init_app(app)
-    # talisman.init_app(app, content_security_policy=csp)
     WTFormsHelpers(app)
 
     # Create static asset bundles

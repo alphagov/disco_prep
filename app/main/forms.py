@@ -55,10 +55,7 @@ class DiscoForm(FlaskForm):
     ga_toggle = SelectField(
         "Please choose the Google Analytics version you would like to use",
         widget=GovSelect(),
-        choices=[("ua", "Universal Analytics"), ("ga4", "Google Analytics 4")],
-        validators=[
-            InputRequired()
-        ]
+        choices=[("ua", "Universal Analytics"), ("ga4", "Google Analytics 4")]
     )
 
     submit = SubmitField("Continue", widget=GovSubmitInput())

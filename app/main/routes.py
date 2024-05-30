@@ -11,15 +11,19 @@ import pandas as pd
 
 @bp.route("/", methods=["GET", "POST"])
 def index():
-
     form = DiscoForm()
+
+    # if request.method == "POST":
+    #     desired_url = request.form['desired_url']
+    #     start_date = request.form['start_date']
+    #     end_date = request.form['end_date']
+    #     ga_toggle = request.form['ga_toggle']
 
     if form.validate_on_submit():
         desired_url = form.desired_url.data
         start_date = form.start_date.data
         end_date = form.end_date.data
         ga_toggle = form.ga_toggle.data
-
 
         df, total_bytes, cost_of_query = get_summary_data(start_date, end_date, desired_url, ga_toggle)
 
@@ -29,6 +33,7 @@ def index():
                                desired_url=desired_url,
                                end_date=end_date,
                                form=form)
+
     return render_template("example_form.html", form=form)
 
 
@@ -49,6 +54,7 @@ def cost_of_query():
 
         return render_template("results.html", tables=top_ten_df.values.tolist(), df_header=top_ten_df.columns.values, csv_link=csv_link, form=form)
     return render_template("example_form.html", form=form)
+
 
 @bp.route("/results", methods=["GET"])
 def results():
@@ -127,8 +133,9 @@ def csrf_error(error):
     flash("The form you were submitting has expired. Please try again.")
     return redirect(request.full_path)
 
-@bp.after_request
-def add_security_headers(resp):
-    csp = "default-src 'self'; script-src 'self' 'sha256-+6WnXIl4mbFTCARd8N3COQmT3bJJmo32N8q8ZSQAIcU=' 'sha256-l1eTVSK8DTnK8+yloud7wZUqFrI0atVo6VlC6PJvYaQ=';"
-    resp.headers['Content-Security-Policy']=csp
-    return resp
+
+# @bp.after_request
+# def add_security_headers(resp):
+#     csp = "default-src 'self'; script-src 'self' 'sha256-+6WnXIl4mbFTCARd8N3COQmT3bJJmo32N8q8ZSQAIcU=' 'sha256-l1eTVSK8DTnK8+yloud7wZUqFrI0atVo6VlC6PJvYaQ=';"
+#     resp.headers['Content-Security-Policy'] = csp
+#     return resp

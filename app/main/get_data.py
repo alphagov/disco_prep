@@ -5,20 +5,17 @@ import google.auth
 
 credentials, project_id = google.auth.default()
 
-
-# creds, project_id = default()
-
 client = bigquery.Client()
 
 
-def get_summary_data(start_date, end_date, desiredPage, ga_toggle):
+def get_summary_data(start_date, end_date, desired_page, ga_toggle):
     start_date = datetime.strftime(start_date, '%Y%m%d')
     end_date = datetime.strftime(end_date, '%Y%m%d')
 
     summary_sql_ua = f"""
       DECLARE first_date STRING DEFAULT '{start_date}';
       DECLARE final_date STRING DEFAULT '{end_date}';
-      DECLARE filtered_urls_for STRING DEFAULT '{desiredPage}';
+      DECLARE filtered_urls_for STRING DEFAULT '{desired_page}';
 
       WITH
         sessions AS (
@@ -43,7 +40,7 @@ def get_summary_data(start_date, end_date, desiredPage, ga_toggle):
     summary_sql_ga4 = f"""
       DECLARE first_date STRING DEFAULT '{start_date}';
       DECLARE final_date STRING DEFAULT '{end_date}';
-      DECLARE filtered_urls_for STRING DEFAULT '{desiredPage}';
+      DECLARE filtered_urls_for STRING DEFAULT '{desired_page}';
 
 
       WITH
@@ -90,14 +87,14 @@ def get_summary_data(start_date, end_date, desiredPage, ga_toggle):
     return client.query(summary_sql).to_dataframe(), gb_processed, query_cost
 
 
-def get_csv_data(start_date, end_date, desiredPage, ga_toggle):
+def get_csv_data(start_date, end_date, desired_page, ga_toggle):
     start_date = datetime.strftime(start_date, '%Y%m%d')
     end_date = datetime.strftime(end_date, '%Y%m%d')
 
     csv_sql_ua = f"""
       DECLARE first_date STRING DEFAULT '{start_date}';
       DECLARE final_date STRING DEFAULT '{end_date}';
-      DECLARE filtered_urls_for STRING DEFAULT '{desiredPage}';
+      DECLARE filtered_urls_for STRING DEFAULT '{desired_page}';
 
       WITH
         sessions AS (
@@ -137,7 +134,7 @@ def get_csv_data(start_date, end_date, desiredPage, ga_toggle):
     csv_sql_ga4 = f"""
       DECLARE first_date STRING DEFAULT '{start_date}';
       DECLARE final_date STRING DEFAULT '{end_date}';
-      DECLARE filtered_urls_for STRING DEFAULT '{desiredPage}';
+      DECLARE filtered_urls_for STRING DEFAULT '{desired_page}';
 
 
       WITH

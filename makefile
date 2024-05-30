@@ -13,7 +13,7 @@ PORT ?= 8000
 
 ## run the code locally without docker
 local-dev:
-	gunicorn $(s_PRODUCT_NAME):app --log-level debug --reload
+	gunicorn govuk-frontend-flask:app --log-level debug --reload
 
 ## build your docker image
 docker-build:

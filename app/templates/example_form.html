@@ -34,7 +34,7 @@ Try and keep the time period to one day
 
        
 
-<form action="" method="post" novalidate>
+<form action="/" method="POST" novalidate>
 {{ form.csrf_token }}
 
 {{ form.desired_url(params={
@@ -56,12 +56,10 @@ Try and keep the time period to one day
 }) }}
 
 {{ form.ga_toggle(params={
-  'type': 'string',
-  'autocomplete': 'string',
-  'spellcheck': false
+  'type': 'string'
 }) }}
 
-{{ form.submit }}
+<p>{{form.submit}}</p>
 </form>
 
     </div>
