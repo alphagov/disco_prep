@@ -39,10 +39,9 @@ docker-clean:
 	docker container prune -f
 
 ## build your image using gcloud builds
-gcloud-build:
-	gcloud builds submit . \
-	--tag=$(g_image) \
-	--region=$(REGION)
+docker-push:
+	docker push \
+	$(g_image)
 
 ## deploy your latest image to Google Cloud Run
 gcloud-deploy:

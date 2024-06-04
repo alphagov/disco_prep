@@ -2,6 +2,7 @@ from flask_wtf import FlaskForm
 from govuk_frontend_wtf.wtforms_widgets import GovRadioInput, GovSubmitInput, GovTextInput, GovDateInput, GovSelect
 from wtforms.fields import RadioField, SubmitField, StringField, DateField, SelectField
 from wtforms.validators import InputRequired, Length
+from wtforms.widgets import HiddenInput
 
 
 class CookiesForm(FlaskForm):
@@ -59,3 +60,10 @@ class DiscoForm(FlaskForm):
     )
 
     submit = SubmitField("Continue", widget=GovSubmitInput())
+
+
+def hide(self):
+    if self.type == "SelectField":
+        print("")
+    else:
+        self.widget = HiddenInput()

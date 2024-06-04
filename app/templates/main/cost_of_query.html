@@ -20,12 +20,13 @@
 <p class="govuk-body">If you are happy with this click on the green button below to get the data you need</p>
 
 <form action="/cost-of-query" method="POST" novalidate>
-
   {{ form.csrf_token }}
-  {{ form.desired_url }}
-  {{ form.start_date }}
-  {{ form.end_date }}
-  {{ form.ga_toggle }})
+  <div hidden>
+    {{ form.desired_url }}
+    {{ form.start_date  }}
+    {{ form.end_date }}
+    {{ form.ga_toggle }} >
+  </div>
   {{ form.submit }}  
 
 </form>

@@ -3,7 +3,7 @@ from flask_wtf.csrf import CSRFError
 from werkzeug.exceptions import HTTPException
 
 from app.main import bp
-from app.main.forms import CookiesForm, DiscoForm
+from app.main.forms import CookiesForm, DiscoForm, hide
 from app.main.get_data import get_summary_data, get_csv_data
 from datetime import datetime
 import pandas as pd
@@ -20,7 +20,7 @@ def index():
         end_date = form.end_date.data
         ga_toggle = form.ga_toggle.data
 
-        total_bytes, cost_of_query = get_summary_data(
+        df, total_bytes, cost_of_query = get_summary_data(
             start_date,
             end_date,
             desired_url,
@@ -28,9 +28,6 @@ def index():
 
         return render_template("cost_of_query.html", total_bytes=total_bytes,
                                cost_of_query=cost_of_query,
-                               start_date=start_date,
-                               desired_url=desired_url,
-                               end_date=end_date,
                                form=form)
 
     return render_template("example_form.html", form=form)
@@ -39,21 +36,21 @@ def index():
 @bp.route("/cost-of-query", methods=["GET", "POST"])
 def cost_of_query():
     form = DiscoForm()
-    print(form.data)
+
     if form.validate_on_submit():
         desired_url = form.desired_url.data
         start_date = form.start_date.data
         end_date = form.end_date.data
         ga_toggle = form.ga_toggle.data
 
-        df = get_summary_data(start_date, end_date, desired_url, ga_toggle)
+        df, x, y = get_summary_data(start_date, end_date, desired_url, ga_toggle)
 
         top_ten_df = df.head(10)
 
-        csv_link = url_for('main.csv_results', start_date=datetime.strftime(start_date, '%Y%m%d'), end_date=datetime.strftime(end_date, '%Y%m%d'), desired_url=desired_url)
+        csv_link = url_for('main.csv_results', start_date=datetime.strftime(start_date, '%Y%m%d'), end_date=datetime.strftime(end_date, '%Y%m%d'), desired_url=desired_url, ga_toggle=ga_toggle)
 
         return render_template("results.html", tables=top_ten_df.values.tolist(), df_header=top_ten_df.columns.values, csv_link=csv_link, form=form)
-    
+
     return render_template("example_form.html", form=form)
 
 
@@ -129,14 +126,14 @@ def http_exception(error):
     return render_template(f"{error.code}.html"), error.code
 
 
-# @bp.app_errorhandler(CSRFError)
-# def csrf_error(error):
-#     flash("The form you were submitting has expired. Please try again.")
-#     return redirect(request.full_path)
+@bp.app_errorhandler(CSRFError)
+def csrf_error(error):
+    flash("The form you were submitting has expired. Please try again.")
+    return redirect(request.full_path)
 
 
-# @bp.after_request
-# def add_security_headers(resp):
-#     csp = "default-src 'self'; script-src 'self' 'sha256-+6WnXIl4mbFTCARd8N3COQmT3bJJmo32N8q8ZSQAIcU=' 'sha256-l1eTVSK8DTnK8+yloud7wZUqFrI0atVo6VlC6PJvYaQ=';"
-#     resp.headers['Content-Security-Policy'] = csp
-#     return resp
+@bp.after_request
+def add_security_headers(resp):
+    csp = "default-src 'self'; script-src 'self' 'sha256-+6WnXIl4mbFTCARd8N3COQmT3bJJmo32N8q8ZSQAIcU=' 'sha256-l1eTVSK8DTnK8+yloud7wZUqFrI0atVo6VlC6PJvYaQ=';"
+    resp.headers['Content-Security-Policy'] = csp
+    return resp

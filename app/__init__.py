@@ -22,6 +22,7 @@ talisman = Talisman()
 
 def create_app(config_class=Config):
     app = Flask(__name__, static_url_path="/assets")
+    assets = Environment(app)
     app.config.from_object(config_class)
     app.jinja_env.lstrip_blocks = True
     app.jinja_env.trim_blocks = True
