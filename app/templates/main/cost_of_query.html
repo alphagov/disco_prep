@@ -19,15 +19,17 @@
   <p class="govuk-body">It will cost £{{ cost_of_query|safe }}</p>
 <p class="govuk-body">If you are happy with this click on the green button below to get the data you need</p>
 
-<form action="" method="post" novalidate>
+<form action="/cost-of-query" method="POST" novalidate>
   {{ form.csrf_token }}
-<input type="hidden" value="{{ form.desired_url.data }}">
-<input type="hidden" value="{{ form.start_date.data.strftime('%d %m %Y') }}">
-<input type="hidden" value="{{ form.end_date.data.strftime('%d %m %Y') }}">
+  <div hidden>
+    {{ form.desired_url }}
+    {{ form.start_date  }}
+    {{ form.end_date }}
+    {{ form.ga_toggle }} >
+  </div>
+  {{ form.submit }}  
 
-     {{ form.submit }}
-    
- </form>
+</form>
 
 </div>
     
